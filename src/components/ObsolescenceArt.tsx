@@ -5,6 +5,8 @@ import { AudioManager } from './AudioManager';
 import { VisualDegradation } from './VisualDegradation';
 import { useObsolescenceStore } from '../store/obsolescenceStore';
 import { useObsolescenceTimer } from '../hooks/useObsolescenceTimer';
+import ad1 from '../../img/Imagen_art1.jpeg';
+import ad2 from '../../img/Imagen_art2.jpeg';
 
 export const ObsolescenceArt = () => {
   useObsolescenceTimer();
@@ -20,12 +22,14 @@ export const ObsolescenceArt = () => {
     isLoggedIn,
     userName,
     setUserName,
-    setLoggedIn
+    setLoggedIn,
+    experienceDurationMs
   } = useObsolescenceStore();
 
   const [showUpdateMessage, setShowUpdateMessage] = useState(false);
   const [updateProgress, setUpdateProgress] = useState(0);
   const [nameInput, setNameInput] = useState('');
+  const showAds = timeElapsed >= (experienceDurationMs / 2);
 
   // Mensajes de actualización falsos
   const FAKE_UPDATE_MESSAGES = [
@@ -151,6 +155,16 @@ export const ObsolescenceArt = () => {
 
       <AudioManager />
       <VisualDegradation />
+      {showAds && (
+        <>
+          <div className="fixed top-4 right-4 z-40">
+            <img src={ad1} className="w-48 h-auto rounded border border-gray-700 shadow-lg" />
+          </div>
+          <div className="fixed bottom-4 left-4 z-40">
+            <img src={ad2} className="w-48 h-auto rounded border border-gray-700 shadow-lg" />
+          </div>
+        </>
+      )}
       {!isLoggedIn && (
         <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
           <div className="bg-gray-800 border border-gray-600 rounded-lg p-8 max-w-md w-full mx-4">
