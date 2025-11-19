@@ -71,7 +71,7 @@ export const AudioManager = () => {
             filter.frequency.value = Math.max(100, 20000 - (distortionLevel * 18000));
             
             // Volumen errático con alta degradación
-            if (distortionLevel > 0.7 && Math.random() > 0.98) {
+            if (distortionLevel > 0.7 && Math.random() > 0.995) {
               gainNode.gain.value = 0;
               setTimeout(() => {
                 if (audioPlaying) gainNode.gain.value = 0.05;

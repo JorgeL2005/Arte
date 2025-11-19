@@ -2,38 +2,21 @@ import { useState, useEffect } from 'react';
 import { useObsolescenceStore } from '../store/obsolescenceStore';
 
 const SURVEY_QUESTIONS = [
-  {
-    id: 1,
-    question: "¿Cuál es tu nombre completo?",
-    type: "text",
-    required: true
-  },
-  {
-    id: 2,
-    question: "¿Cuál es tu edad?",
-    type: "number",
-    required: true
-  },
-  {
-    id: 3,
-    question: "¿Cuál es tu correo electrónico?",
-    type: "email",
-    required: true
-  },
-  {
-    id: 4,
-    question: "¿Cuál es tu ocupación principal?",
-    type: "select",
-    options: ["Estudiante", "Trabajador", "Desempleado", "Otro"],
-    required: true
-  },
-  {
-    id: 5,
-    question: "¿Con qué frecuencia cambias tu dispositivo móvil?",
-    type: "select",
-    options: ["Cada año", "Cada 2-3 años", "Cada 4-5 años", "Más de 5 años"],
-    required: true
-  }
+  { id: 1, question: "¿Cuál es tu nombre completo?", type: "text", required: true },
+  { id: 2, question: "¿Cuál es tu edad?", type: "number", required: true },
+  { id: 3, question: "¿Cuál es tu correo electrónico?", type: "email", required: true },
+  { id: 4, question: "¿Cuál es tu ocupación principal?", type: "select", options: ["Estudiante", "Trabajador", "Desempleado", "Otro"], required: true },
+  { id: 5, question: "¿Con qué frecuencia cambias tu dispositivo móvil?", type: "select", options: ["Cada año", "Cada 2-3 años", "Cada 4-5 años", "Más de 5 años"], required: true },
+  { id: 6, question: "Marca de teléfono preferida", type: "select", options: ["Apple", "Samsung", "Xiaomi", "Motorola", "Otro"], required: true },
+  { id: 7, question: "Nivel de satisfacción con tu dispositivo actual (0-10)", type: "range", required: true },
+  { id: 8, question: "Gasto mensual aproximado en tecnología (S/)", type: "number", required: true },
+  { id: 9, question: "¿Has reparado alguna vez un dispositivo?", type: "select", options: ["Sí", "No"], required: true },
+  { id: 10, question: "Componente que más se te malogra", type: "select", options: ["Batería", "Pantalla", "Botones", "Audio", "Almacenamiento"], required: true },
+  { id: 11, question: "¿Qué tan frustrante te resulta la obsolescencia? (0-10)", type: "range", required: true },
+  { id: 12, question: "¿Cuántos dispositivos usas a diario?", type: "number", required: true },
+  { id: 13, question: "¿Cuándo compraste tu último teléfono?", type: "date", required: true },
+  { id: 14, question: "¿Sueles conservar la garantía?", type: "select", options: ["Siempre", "A veces", "Nunca"], required: true },
+  { id: 15, question: "Opinión breve sobre obsolescencia programada", type: "text", required: false }
 ];
 
 export const SurveyComponent = () => {

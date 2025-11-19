@@ -49,14 +49,14 @@ export interface ObsolescenceState {
   reset: () => void;
 }
 
-// Sistema de fallos programados
+const EXPERIENCE_DURATION_MS = 240000;
 const FAILURE_POINTS = [
-  { time: 5000, failures: ['button_delay'] },
-  { time: 10000, failures: ['audio_distortion', 'visual_glitch'] },
-  { time: 15000, failures: ['input_lag', 'button_unresponsive'] },
-  { time: 25000, failures: ['screen_flicker', 'audio_cuts'] },
-  { time: 35000, failures: ['navigation_block', 'survey_corruption'] },
-  { time: 45000, failures: ['total_breakdown'] }
+  { time: 30000, failures: ['button_delay'] },
+  { time: 60000, failures: ['audio_distortion', 'visual_glitch'] },
+  { time: 90000, failures: ['input_lag', 'button_unresponsive'] },
+  { time: 135000, failures: ['screen_flicker', 'audio_cuts'] },
+  { time: 180000, failures: ['navigation_block', 'survey_corruption'] },
+  { time: 240000, failures: ['total_breakdown'] }
 ];
 
 const FAILURE_TYPES = {
@@ -99,7 +99,7 @@ export const useObsolescenceStore = create<ObsolescenceState>((set, get) => ({
     if (!isActive) return;
     
     const newTimeElapsed = timeElapsed + time;
-    const degradationLevel = Math.min(100, (newTimeElapsed / 50000) * 100);
+    const degradationLevel = Math.min(100, (newTimeElapsed / EXPERIENCE_DURATION_MS) * 100);
     
     // Verificar si debemos activar nuevos fallos
     FAILURE_POINTS.forEach(failurePoint => {

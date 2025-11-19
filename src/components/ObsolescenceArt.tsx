@@ -14,7 +14,9 @@ export const ObsolescenceArt = () => {
     timeElapsed,
     rewardPromised,
     visualCorruption,
-    glitchIntensity 
+    glitchIntensity,
+    reset,
+    startTimer
   } = useObsolescenceStore();
 
   const [showUpdateMessage, setShowUpdateMessage] = useState(false);
@@ -97,6 +99,13 @@ export const ObsolescenceArt = () => {
 
   // Verificar si hay fallos críticos
   const hasCriticalFailures = activeFailures.some(f => f.severity > 8);
+  const isTotalBreakdown = degradationLevel >= 100;
+  const handleRestart = () => {
+    reset();
+    startTimer();
+    setShowUpdateMessage(false);
+    setUpdateProgress(0);
+  };
 
   return (
     <div 
@@ -161,6 +170,22 @@ export const ObsolescenceArt = () => {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Fallo total con opción de reinicio */}
+      {isTotalBreakdown && (
+        <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
+          <div className="bg-gray-800 border border-gray-600 rounded-lg p-8 max-w-md w-full mx-4 text-center">
+            <h3 className="text-2xl font-bold text-white mb-4">Fallo total del sistema</h3>
+            <p className="text-gray-300 mb-6">La experiencia ha colapsado. Puede reiniciarla para comenzar nuevamente.</p>
+            <button
+              onClick={handleRestart}
+              className="px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-500 transition-colors"
+            >
+              Reiniciar experiencia
+            </button>
           </div>
         </div>
       )}
