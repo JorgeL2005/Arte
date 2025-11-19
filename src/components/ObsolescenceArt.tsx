@@ -16,11 +16,16 @@ export const ObsolescenceArt = () => {
     visualCorruption,
     glitchIntensity,
     reset,
-    startTimer
+    startTimer,
+    isLoggedIn,
+    userName,
+    setUserName,
+    setLoggedIn
   } = useObsolescenceStore();
 
   const [showUpdateMessage, setShowUpdateMessage] = useState(false);
   const [updateProgress, setUpdateProgress] = useState(0);
+  const [nameInput, setNameInput] = useState('');
 
   // Mensajes de actualización falsos
   const FAKE_UPDATE_MESSAGES = [
@@ -36,7 +41,7 @@ export const ObsolescenceArt = () => {
 
   // Mostrar mensajes de actualización en momentos críticos
   useEffect(() => {
-    if (degradationLevel > 60 && Math.random() > 0.95) {
+    if (degradationLevel > 70 && Math.random() > 0.98) {
       setShowUpdateMessage(true);
       setUpdateProgress(0);
       
@@ -59,7 +64,6 @@ export const ObsolescenceArt = () => {
   // Efectos visuales de degradación
   const getBodyStyles = () => {
     const corruption = visualCorruption;
-    const glitch = glitchIntensity;
     
     return {
       filter: `
@@ -101,10 +105,23 @@ export const ObsolescenceArt = () => {
   const hasCriticalFailures = activeFailures.some(f => f.severity > 8);
   const isTotalBreakdown = degradationLevel >= 100;
   const handleRestart = () => {
+    const prevName = userName;
     reset();
+    if (prevName) {
+      setUserName(prevName);
+      setLoggedIn(true);
+    }
     startTimer();
     setShowUpdateMessage(false);
     setUpdateProgress(0);
+  };
+
+  const handleLogin = () => {
+    const name = nameInput.trim();
+    if (!name) return;
+    setUserName(name);
+    setLoggedIn(true);
+    startTimer();
   };
 
   return (
@@ -112,7 +129,7 @@ export const ObsolescenceArt = () => {
       className="min-h-screen transition-all duration-300"
       style={getBodyStyles()}
     >
-      <style jsx>{`
+      <style>{`
         @keyframes glitch {
           0% { transform: translate(0); }
           20% { transform: translate(-2px, 2px); }
@@ -134,6 +151,27 @@ export const ObsolescenceArt = () => {
 
       <AudioManager />
       <VisualDegradation />
+      {!isLoggedIn && (
+        <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
+          <div className="bg-gray-800 border border-gray-600 rounded-lg p-8 max-w-md w-full mx-4">
+            <h3 className="text-2xl font-bold text-white mb-4">Inicio de sesión</h3>
+            <p className="text-gray-300 mb-4">Ingrese su nombre para comenzar.</p>
+            <input
+              type="text"
+              value={nameInput}
+              onChange={(e) => setNameInput(e.target.value)}
+              className="w-full p-3 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-500 focus:outline-none mb-4"
+              placeholder="Su nombre"
+            />
+            <button
+              onClick={handleLogin}
+              className="w-full px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-500 transition-colors"
+            >
+              Iniciar
+            </button>
+          </div>
+        </div>
+      )}
       
       {/* Overlay de glitch */}
       {glitchIntensity > 0.5 && (
@@ -199,7 +237,7 @@ export const ObsolescenceArt = () => {
                 Encuesta Premiada - Gana 10 Soles
               </h1>
               <p className="text-gray-300">
-                Complete nuestra breve encuesta y reciba su recompensa inmediatamente
+                {userName ? `${userName}, complete nuestra breve encuesta y reciba su recompensa` : 'Complete nuestra breve encuesta y reciba su recompensa inmediatamente'}
               </p>
             </div>
             

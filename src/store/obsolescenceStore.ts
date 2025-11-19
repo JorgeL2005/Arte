@@ -13,6 +13,9 @@ export interface ObsolescenceState {
   timeElapsed: number;
   degradationLevel: number; // 0-100
   isActive: boolean;
+  userName: string | null;
+  isLoggedIn: boolean;
+  experienceDurationMs: number;
   
   // Survey progress
   surveyProgress: number;
@@ -46,17 +49,19 @@ export interface ObsolescenceState {
   setAudioPlaying: (playing: boolean) => void;
   setVisualCorruption: (corruption: number) => void;
   setGlitchIntensity: (intensity: number) => void;
+  setUserName: (name: string) => void;
+  setLoggedIn: (logged: boolean) => void;
   reset: () => void;
 }
 
-const EXPERIENCE_DURATION_MS = 240000;
+const EXPERIENCE_DURATION_MS = 180000;
 const FAILURE_POINTS = [
   { time: 30000, failures: ['button_delay'] },
   { time: 60000, failures: ['audio_distortion', 'visual_glitch'] },
   { time: 90000, failures: ['input_lag', 'button_unresponsive'] },
-  { time: 135000, failures: ['screen_flicker', 'audio_cuts'] },
-  { time: 180000, failures: ['navigation_block', 'survey_corruption'] },
-  { time: 240000, failures: ['total_breakdown'] }
+  { time: 120000, failures: ['screen_flicker', 'audio_cuts'] },
+  { time: 150000, failures: ['navigation_block', 'survey_corruption'] },
+  { time: 180000, failures: ['total_breakdown'] }
 ];
 
 const FAILURE_TYPES = {
@@ -77,6 +82,9 @@ export const useObsolescenceStore = create<ObsolescenceState>((set, get) => ({
   timeElapsed: 0,
   degradationLevel: 0,
   isActive: false,
+  userName: null,
+  isLoggedIn: false,
+  experienceDurationMs: EXPERIENCE_DURATION_MS,
   surveyProgress: 0,
   surveyCompleted: false,
   rewardPromised: false,
@@ -185,10 +193,21 @@ export const useObsolescenceStore = create<ObsolescenceState>((set, get) => ({
     set({ glitchIntensity: Math.max(0, Math.min(1, intensity)) });
   },
   
+  setUserName: (name: string) => {
+    set({ userName: name });
+  },
+  
+  setLoggedIn: (logged: boolean) => {
+    set({ isLoggedIn: logged });
+  },
+  
   reset: () => set({
     timeElapsed: 0,
     degradationLevel: 0,
     isActive: false,
+    userName: null,
+    isLoggedIn: false,
+    experienceDurationMs: EXPERIENCE_DURATION_MS,
     surveyProgress: 0,
     surveyCompleted: false,
     rewardPromised: false,

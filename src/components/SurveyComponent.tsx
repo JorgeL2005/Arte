@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useObsolescenceStore } from '../store/obsolescenceStore';
 
 const SURVEY_QUESTIONS = [
@@ -16,7 +16,12 @@ const SURVEY_QUESTIONS = [
   { id: 12, question: "¿Cuántos dispositivos usas a diario?", type: "number", required: true },
   { id: 13, question: "¿Cuándo compraste tu último teléfono?", type: "date", required: true },
   { id: 14, question: "¿Sueles conservar la garantía?", type: "select", options: ["Siempre", "A veces", "Nunca"], required: true },
-  { id: 15, question: "Opinión breve sobre obsolescencia programada", type: "text", required: false }
+  { id: 15, question: "Opinión breve sobre obsolescencia programada", type: "text", required: false },
+  { id: 16, question: "¿Con qué frecuencia actualizas el sistema operativo?", type: "select", options: ["Cada actualización", "A veces", "Nunca"], required: true },
+  { id: 17, question: "¿Preferirías reparar o comprar nuevo?", type: "select", options: ["Reparar", "Comprar nuevo"], required: true },
+  { id: 18, question: "¿Cuál es tu presupuesto máximo para reparaciones? (S/)", type: "number", required: true },
+  { id: 19, question: "¿Cuánto tiempo esperas que dure un teléfono? (años)", type: "number", required: true },
+  { id: 20, question: "Describe el peor fallo que has tenido", type: "text", required: false }
 ];
 
 export const SurveyComponent = () => {
@@ -33,7 +38,6 @@ export const SurveyComponent = () => {
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [inputErrors, setInputErrors] = useState<string[]>([]);
-  const [buttonClicks, setButtonClicks] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const degradation = degradationLevel / 100;
@@ -94,7 +98,6 @@ export const SurveyComponent = () => {
   // Manejar el clic en botones con fallos
   const handleButtonClick = (action: string) => {
     const failures = getActiveSurveyFailures();
-    setButtonClicks(prev => prev + 1);
 
     // Verificar fallos de botón
     const buttonFailures = failures.filter(f => f.type === 'button');
@@ -170,7 +173,7 @@ export const SurveyComponent = () => {
     return {
       filter: `blur(${degradation * 1}px)`,
       opacity: 1 - degradation * 0.2,
-      pointerEvents: hasInputFailures && Math.random() > 0.7 ? 'none' : 'auto'
+      pointerEvents: (hasInputFailures && Math.random() > 0.7 ? 'none' : 'auto') as 'auto' | 'none'
     };
   };
 

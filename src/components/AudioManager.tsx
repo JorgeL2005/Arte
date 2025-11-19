@@ -13,7 +13,10 @@ export const AudioManager = () => {
     // Auto-iniciar el audio cuando el componente se monte
     const startAudio = async () => {
       try {
-        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+        const w = window as unknown as { AudioContext?: typeof AudioContext; webkitAudioContext?: typeof AudioContext };
+        const AudioContextClass = w.AudioContext ?? w.webkitAudioContext;
+        if (!AudioContextClass) return;
+        const audioContext = new AudioContextClass();
         
         if (audioContext.state === 'suspended') {
           await audioContext.resume();
@@ -90,10 +93,11 @@ export const AudioManager = () => {
     };
 
     // Iniciar después de un pequeño retraso para permitir la interacción del usuario
+    if (audioPlaying) return;
     const timer = setTimeout(startAudio, 1000);
     
     return () => clearTimeout(timer);
-  }, []);
+  }, [audioPlaying, distortionLevel, setAudioPlaying]);
 
   useEffect(() => {
     // Verificar fallos de audio específicos

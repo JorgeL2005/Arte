@@ -1,24 +1,23 @@
 import { useEffect, useState } from 'react';
 import { useObsolescenceStore } from '../store/obsolescenceStore';
-import { useObsolescenceTimer } from '../hooks/useObsolescenceTimer';
 
 export const TimerComponent = () => {
-  useObsolescenceTimer();
   const { 
     timeElapsed, 
     degradationLevel, 
-    isActive 
+    experienceDurationMs
   } = useObsolescenceStore();
 
-  const [displayTime, setDisplayTime] = useState(60); // Comenzamos con 60 segundos
+  const totalSeconds = Math.floor(experienceDurationMs / 1000);
+  const [displayTime, setDisplayTime] = useState(totalSeconds);
 
   useEffect(() => {
     // Actualizar el display del tiempo basado en el tiempo transcurrido
     const degradation = degradationLevel / 100;
     const displayVariation = degradation > 0.3 ? Math.random() * 3 - 1.5 : 0;
-    const newDisplayTime = Math.max(0, 60 - (timeElapsed / 1000) + displayVariation);
+    const newDisplayTime = Math.max(0, totalSeconds - (timeElapsed / 1000) + displayVariation);
     setDisplayTime(Math.max(0, newDisplayTime));
-  }, [timeElapsed, degradationLevel]);
+  }, [timeElapsed, degradationLevel, totalSeconds]);
 
   // Efectos visuales basados en degradación
   const getTimerStyles = () => {
@@ -59,7 +58,7 @@ export const TimerComponent = () => {
         <div className="w-full bg-gray-700 rounded-full h-2">
           <div 
             className="bg-gradient-to-r from-green-500 to-red-500 h-2 rounded-full transition-all duration-300"
-            style={{ width: `${Math.max(0, (displayTime / 60) * 100)}%` }}
+            style={{ width: `${Math.max(0, (displayTime / totalSeconds) * 100)}%` }}
           />
         </div>
         <p className="text-sm text-gray-400 mt-2">

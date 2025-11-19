@@ -2,13 +2,11 @@ import { useEffect, useRef } from 'react';
 import { useObsolescenceStore } from '../store/obsolescenceStore';
 
 export const useObsolescenceTimer = () => {
-  const { isActive, updateTime, startTimer } = useObsolescenceStore();
+  const { isActive, updateTime } = useObsolescenceStore();
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    // Iniciar el timer automáticamente cuando el componente se monte
-    startTimer();
-  }, [startTimer]);
+  }, []);
 
   useEffect(() => {
     if (isActive && !intervalRef.current) {
