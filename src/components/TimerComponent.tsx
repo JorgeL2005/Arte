@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useObsolescenceStore } from '../store/obsolescenceStore';
+import { useObsolescenceTimer } from '../hooks/useObsolescenceTimer';
 
 export const TimerComponent = () => {
+  useObsolescenceTimer();
   const { 
     timeElapsed, 
     degradationLevel, 

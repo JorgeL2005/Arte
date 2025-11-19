@@ -42,6 +42,12 @@ export const SurveyComponent = () => {
 
   const degradation = degradationLevel / 100;
 
+  const isQuestionAnswered = (q: { required: boolean }, value: string | undefined) => {
+    if (!q.required) return true;
+    const v = (value ?? '').trim();
+    return v !== '';
+  };
+
   // Verificar fallos activos que afecten la encuesta
   const getActiveSurveyFailures = () => {
     return activeFailures.filter(f => 
@@ -128,6 +134,12 @@ export const SurveyComponent = () => {
     switch (action) {
       case 'next':
         if (currentQuestion < SURVEY_QUESTIONS.length - 1) {
+          const q = SURVEY_QUESTIONS[currentQuestion];
+          const val = answers[q.id];
+          if (!isQuestionAnswered(q, val)) {
+            setInputErrors(['Debe responder la pregunta antes de continuar.']);
+            return;
+          }
           setCurrentQuestion(prev => prev + 1);
           setSurveyProgress(((currentQuestion + 1) / SURVEY_QUESTIONS.length) * 100);
         }
@@ -145,6 +157,12 @@ export const SurveyComponent = () => {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
+    const missing = SURVEY_QUESTIONS.filter(q => q.required && !isQuestionAnswered(q, answers[q.id]));
+    if (missing.length > 0) {
+      setInputErrors(['Debe responder todas las preguntas obligatorias.']);
+      setIsSubmitting(false);
+      return;
+    }
     
     // Simular procesamiento con errores
     await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 3000));
@@ -216,6 +234,8 @@ export const SurveyComponent = () => {
 
   const currentQ = SURVEY_QUESTIONS[currentQuestion];
   const corruptedQuestion = corruptText(currentQ.question);
+  const isCurrentAnswered = isQuestionAnswered(currentQ, answers[currentQ.id]);
+  const allRequiredAnswered = SURVEY_QUESTIONS.every(q => !q.required || isQuestionAnswered(q, answers[q.id]));
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-gray-800 rounded-lg border border-gray-600">
@@ -295,7 +315,7 @@ export const SurveyComponent = () => {
           {currentQuestion === SURVEY_QUESTIONS.length - 1 ? (
             <button
               onClick={() => handleButtonClick('submit')}
-              disabled={isSubmitting}
+              disabled={isSubmitting || !allRequiredAnswered}
               className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               style={getButtonStyles()}
             >
@@ -304,6 +324,7 @@ export const SurveyComponent = () => {
           ) : (
             <button
               onClick={() => handleButtonClick('next')}
+              disabled={!isCurrentAnswered}
               className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               style={getButtonStyles()}
             >
