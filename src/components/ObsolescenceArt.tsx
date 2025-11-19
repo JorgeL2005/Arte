@@ -157,11 +157,11 @@ export const ObsolescenceArt = () => {
       <VisualDegradation />
       {showAds && (
         <>
-          <div className="fixed top-4 right-4 z-40">
-            <img src={ad1} className="w-48 h-auto rounded border border-gray-700 shadow-lg" />
+          <div className="fixed top-6 right-6 z-40">
+            <img src={ad1} className="w-96 h-auto rounded-lg border-2 border-gray-700 shadow-2xl" />
           </div>
-          <div className="fixed bottom-4 left-4 z-40">
-            <img src={ad2} className="w-48 h-auto rounded border border-gray-700 shadow-lg" />
+          <div className="fixed bottom-6 left-6 z-40">
+            <img src={ad2} className="w-96 h-auto rounded-lg border-2 border-gray-700 shadow-2xl" />
           </div>
         </>
       )}

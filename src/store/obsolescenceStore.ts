@@ -56,11 +56,11 @@ export interface ObsolescenceState {
 
 const EXPERIENCE_DURATION_MS = 180000;
 const FAILURE_POINTS = [
-  { time: 30000, failures: ['button_delay'] },
-  { time: 60000, failures: ['audio_distortion', 'visual_glitch'] },
-  { time: 90000, failures: ['input_lag', 'button_unresponsive'] },
-  { time: 120000, failures: ['screen_flicker', 'audio_cuts'] },
-  { time: 150000, failures: ['navigation_block', 'survey_corruption'] },
+  { time: 90000, failures: ['button_delay'] },
+  { time: 120000, failures: ['audio_distortion', 'visual_glitch'] },
+  { time: 150000, failures: ['input_lag', 'button_unresponsive'] },
+  { time: 165000, failures: ['screen_flicker', 'audio_cuts'] },
+  { time: 175000, failures: ['navigation_block', 'survey_corruption'] },
   { time: 180000, failures: ['total_breakdown'] }
 ];
 
