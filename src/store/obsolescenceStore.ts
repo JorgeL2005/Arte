@@ -54,14 +54,14 @@ export interface ObsolescenceState {
   reset: () => void;
 }
 
-const EXPERIENCE_DURATION_MS = 180000;
+const EXPERIENCE_DURATION_MS = 300000;
 const FAILURE_POINTS = [
-  { time: 90000, failures: ['button_delay'] },
-  { time: 120000, failures: ['audio_distortion', 'visual_glitch'] },
-  { time: 150000, failures: ['input_lag', 'button_unresponsive'] },
-  { time: 165000, failures: ['screen_flicker', 'audio_cuts'] },
-  { time: 175000, failures: ['navigation_block', 'survey_corruption'] },
-  { time: 180000, failures: ['total_breakdown'] }
+  { time: 120000, failures: ['button_delay'] },
+  { time: 180000, failures: ['audio_distortion', 'visual_glitch'] },
+  { time: 240000, failures: ['input_lag', 'button_unresponsive'] },
+  { time: 270000, failures: ['screen_flicker', 'audio_cuts'] },
+  { time: 295000, failures: ['navigation_block'] },
+  { time: 300000, failures: ['total_breakdown'] }
 ];
 
 const FAILURE_TYPES = {
@@ -73,7 +73,6 @@ const FAILURE_TYPES = {
   screen_flicker: { type: 'visual' as const, severity: 8 },
   audio_cuts: { type: 'audio' as const, severity: 8 },
   navigation_block: { type: 'navigation' as const, severity: 9 },
-  survey_corruption: { type: 'input' as const, severity: 9 },
   total_breakdown: { type: 'visual' as const, severity: 10 }
 };
 

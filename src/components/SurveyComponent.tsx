@@ -2,26 +2,21 @@ import { useState } from 'react';
 import { useObsolescenceStore } from '../store/obsolescenceStore';
 
 const SURVEY_QUESTIONS = [
-  { id: 1, question: "¿Cuál es tu nombre completo?", type: "text", required: true },
-  { id: 2, question: "¿Cuál es tu edad?", type: "number", required: true },
-  { id: 3, question: "¿Cuál es tu correo electrónico?", type: "email", required: true },
-  { id: 4, question: "¿Cuál es tu ocupación principal?", type: "select", options: ["Estudiante", "Trabajador", "Desempleado", "Otro"], required: true },
-  { id: 5, question: "¿Con qué frecuencia cambias tu dispositivo móvil?", type: "select", options: ["Cada año", "Cada 2-3 años", "Cada 4-5 años", "Más de 5 años"], required: true },
-  { id: 6, question: "Marca de teléfono preferida", type: "select", options: ["Apple", "Samsung", "Xiaomi", "Motorola", "Otro"], required: true },
-  { id: 7, question: "Nivel de satisfacción con tu dispositivo actual (0-10)", type: "range", required: true },
-  { id: 8, question: "Gasto mensual aproximado en tecnología (S/)", type: "number", required: true },
-  { id: 9, question: "¿Has reparado alguna vez un dispositivo?", type: "select", options: ["Sí", "No"], required: true },
-  { id: 10, question: "Componente que más se te malogra", type: "select", options: ["Batería", "Pantalla", "Botones", "Audio", "Almacenamiento"], required: true },
-  { id: 11, question: "¿Qué tan frustrante te resulta la obsolescencia? (0-10)", type: "range", required: true },
-  { id: 12, question: "¿Cuántos dispositivos usas a diario?", type: "number", required: true },
-  { id: 13, question: "¿Cuándo compraste tu último teléfono?", type: "date", required: true },
-  { id: 14, question: "¿Sueles conservar la garantía?", type: "select", options: ["Siempre", "A veces", "Nunca"], required: true },
-  { id: 15, question: "Opinión breve sobre obsolescencia programada", type: "text", required: false },
-  { id: 16, question: "¿Con qué frecuencia actualizas el sistema operativo?", type: "select", options: ["Cada actualización", "A veces", "Nunca"], required: true },
-  { id: 17, question: "¿Preferirías reparar o comprar nuevo?", type: "select", options: ["Reparar", "Comprar nuevo"], required: true },
-  { id: 18, question: "¿Cuál es tu presupuesto máximo para reparaciones? (S/)", type: "number", required: true },
-  { id: 19, question: "¿Cuánto tiempo esperas que dure un teléfono? (años)", type: "number", required: true },
-  { id: 20, question: "Describe el peor fallo que has tenido", type: "text", required: false }
+  { id: 1, question: "¿Qué entiendes por obsolescencia programada?", type: "text", required: true },
+  { id: 2, question: "Describe una experiencia personal donde sentiste que tu dispositivo 'envejeció' demasiado rápido.", type: "text", required: true },
+  { id: 3, question: "¿Cómo impacta la obsolescencia programada en tu economía?", type: "text", required: true },
+  { id: 4, question: "¿Qué rol juegan las actualizaciones de software en la obsolescencia?", type: "text", required: true },
+  { id: 5, question: "¿Crees que las marcas diseñan productos para durar menos? Explica.", type: "text", required: true },
+  { id: 6, question: "¿Qué emociones te genera que un dispositivo se vuelva lento o inútil?", type: "text", required: true },
+  { id: 7, question: "¿Qué cambios propondrías para reducir la obsolescencia programada?", type: "text", required: true },
+  { id: 8, question: "¿Cómo afecta la obsolescencia al medio ambiente?", type: "text", required: true },
+  { id: 9, question: "Cuenta una historia de un 'fallo' que te obligó a reemplazar un equipo.", type: "text", required: true },
+  { id: 10, question: "¿Qué papel tiene el marketing en tu decisión de reemplazar dispositivos?", type: "text", required: true },
+  { id: 11, question: "¿Hasta qué punto la lentitud y los clics fallidos te llevan a rendirte?", type: "text", required: true },
+  { id: 12, question: "¿Crees que existe el 'derecho a reparar'? ¿Por qué?", type: "text", required: true },
+  { id: 13, question: "Imagina un mundo sin obsolescencia programada. ¿Cómo sería tu relación con la tecnología?", type: "text", required: true },
+  { id: 14, question: "¿Has sentido que una actualización 'rompió' funciones útiles? Describe.", type: "text", required: true },
+  { id: 15, question: "¿Qué responsabilidad tenemos como usuarios frente a la obsolescencia?", type: "text", required: true }
 ];
 
 export const SurveyComponent = () => {
@@ -55,20 +50,7 @@ export const SurveyComponent = () => {
     );
   };
 
-  // Función para corromper el texto de las preguntas
-  const corruptText = (text: string) => {
-    if (degradation < 0.3) return text;
-    
-    const corruptionLevel = Math.floor(degradation * text.length * 0.3);
-    const chars = text.split('');
-    
-    for (let i = 0; i < corruptionLevel; i++) {
-      const randomIndex = Math.floor(Math.random() * chars.length);
-      chars[randomIndex] = String.fromCharCode(33 + Math.random() * 94);
-    }
-    
-    return chars.join('');
-  };
+  // Sin corrupción de texto: mantener legible siempre
 
   // Manejar cambios en los inputs con errores introducidos
   const handleInputChange = (questionId: number, value: string) => {
@@ -85,10 +67,6 @@ export const SurveyComponent = () => {
               setAnswers(prev => ({ ...prev, [questionId]: value }));
             }, failure.severity * 100);
             return;
-          case 'survey_corruption':
-            // Corromper el valor
-            corruptedValue = value.split('').reverse().join('');
-            break;
           default:
             // Perder caracteres aleatoriamente
             if (Math.random() > 0.7) {
@@ -113,9 +91,12 @@ export const SurveyComponent = () => {
         switch (failure.id) {
           case 'button_delay':
             // Retrasar la acción
-            setTimeout(() => {
-              executeAction(action);
-            }, failure.severity * 200);
+            {
+              const delay = Math.max(1000, failure.severity * 200);
+              setTimeout(() => {
+                executeAction(action);
+              }, delay);
+            }
             return;
           case 'button_unresponsive':
             // Hacer el botón no responsivo
@@ -233,7 +214,6 @@ export const SurveyComponent = () => {
   }
 
   const currentQ = SURVEY_QUESTIONS[currentQuestion];
-  const corruptedQuestion = corruptText(currentQ.question);
   const isCurrentAnswered = isQuestionAnswered(currentQ, answers[currentQ.id]);
   const allRequiredAnswered = SURVEY_QUESTIONS.every(q => !q.required || isQuestionAnswered(q, answers[q.id]));
 
@@ -258,7 +238,7 @@ export const SurveyComponent = () => {
       <div className="space-y-4">
         <div>
           <label className="block text-white mb-2" style={getInputStyles()}>
-            {corruptedQuestion}
+            {currentQ.question}
             {currentQ.required && <span className="text-red-500 ml-1">*</span>}
           </label>
           
@@ -271,15 +251,9 @@ export const SurveyComponent = () => {
               disabled={getActiveSurveyFailures().some(f => f.type === 'input' && Math.random() > 0.6)}
             >
               <option value="">Seleccione una opción</option>
-              {currentQ.options?.map((option, index) => {
-                const corruptedOption = degradation > 0.4 ? 
-                  option.split('').reverse().join('') : option;
-                return (
-                  <option key={index} value={option}>
-                    {corruptedOption}
-                  </option>
-                );
-              })}
+              {(currentQ as { options?: string[] }).options?.map((option: string, index: number) => (
+                <option key={index} value={option}>{option}</option>
+              ))}
             </select>
           ) : (
             <input

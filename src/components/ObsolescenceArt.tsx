@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { TimerComponent } from './TimerComponent';
 import { SurveyComponent } from './SurveyComponent';
 import { AudioManager } from './AudioManager';
 import { VisualDegradation } from './VisualDegradation';
@@ -29,7 +28,11 @@ export const ObsolescenceArt = () => {
   const [showUpdateMessage, setShowUpdateMessage] = useState(false);
   const [updateProgress, setUpdateProgress] = useState(0);
   const [nameInput, setNameInput] = useState('');
-  const showAds = timeElapsed >= (experienceDurationMs / 2);
+  const [updateShown, setUpdateShown] = useState(false);
+  const [showBlueScreen, setShowBlueScreen] = useState(false);
+  const [blueScreenCount, setBlueScreenCount] = useState(0);
+  const showAds = timeElapsed >= (experienceDurationMs - 60000);
+  const [showVirusPopup, setShowVirusPopup] = useState(false);
 
   // Mensajes de actualización falsos
   const FAKE_UPDATE_MESSAGES = [
@@ -43,13 +46,12 @@ export const ObsolescenceArt = () => {
     "Verificando integridad del sistema..."
   ];
 
-  // Mostrar mensajes de actualización en momentos críticos
+  // Mostrar "Actualizando Sistema" en los últimos 20s
   useEffect(() => {
-    if (degradationLevel > 70 && Math.random() > 0.98) {
+    if (!updateShown && timeElapsed >= (experienceDurationMs - 20000)) {
       setShowUpdateMessage(true);
       setUpdateProgress(0);
-      
-      // Simular progreso de actualización
+      setUpdateShown(true);
       const interval = setInterval(() => {
         setUpdateProgress(prev => {
           if (prev >= 100) {
@@ -60,10 +62,16 @@ export const ObsolescenceArt = () => {
           return prev + Math.random() * 15;
         });
       }, 500);
-
       return () => clearInterval(interval);
     }
-  }, [degradationLevel, timeElapsed]);
+  }, [timeElapsed, experienceDurationMs, updateShown]);
+
+  // Pantallazo azul desde minuto 3, máximo 2 veces
+  useEffect(() => {
+    if (!showBlueScreen && blueScreenCount < 2 && timeElapsed >= 180000 && Math.random() > 0.997) {
+      setShowBlueScreen(true);
+    }
+  }, [timeElapsed, showBlueScreen, blueScreenCount]);
 
   // Efectos visuales de degradación
   const getBodyStyles = () => {
@@ -118,6 +126,9 @@ export const ObsolescenceArt = () => {
     startTimer();
     setShowUpdateMessage(false);
     setUpdateProgress(0);
+    setUpdateShown(false);
+    setShowBlueScreen(false);
+    setBlueScreenCount(0);
   };
 
   const handleLogin = () => {
@@ -126,6 +137,24 @@ export const ObsolescenceArt = () => {
     setUserName(name);
     setLoggedIn(true);
     startTimer();
+  };
+
+  const handleWaitBlueScreen = () => {
+    setTimeout(() => {
+      setShowBlueScreen(false);
+      setBlueScreenCount(prev => prev + 1);
+    }, 1000);
+  };
+
+
+  useEffect(() => {
+    if (!showVirusPopup && degradationLevel > 40 && Math.random() > 0.997) {
+      setShowVirusPopup(true);
+    }
+  }, [timeElapsed, degradationLevel, showVirusPopup]);
+
+  const handleInstallVirus = () => {
+    setShowVirusPopup(false);
   };
 
   return (
@@ -164,6 +193,20 @@ export const ObsolescenceArt = () => {
             <img src={ad2} className="w-96 h-auto rounded-lg border-2 border-gray-700 shadow-2xl" />
           </div>
         </>
+      )}
+      {showVirusPopup && (
+        <div className="fixed bottom-8 right-8 z-50">
+          <div className="bg-red-900 border border-red-600 rounded-lg p-4 w-80 shadow-2xl">
+            <h3 className="text-white font-bold mb-2">Alerta: Virus detectado</h3>
+            <p className="text-red-200 text-sm mb-4">Se recomienda instalar el antivirus "Confiable" inmediatamente.</p>
+            <button
+              onClick={handleInstallVirus}
+              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500 transition-colors w-full"
+            >
+              Instalar
+            </button>
+          </div>
+        </div>
       )}
       {!isLoggedIn && (
         <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
@@ -226,12 +269,33 @@ export const ObsolescenceArt = () => {
         </div>
       )}
 
-      {/* Fallo total con opción de reinicio */}
+      {/* Pantallazo azul */}
+      {showBlueScreen && (
+        <div className="fixed inset-0 bg-blue-900 flex items-center justify-center z-50">
+          <div className="text-center px-6">
+            <h2 className="text-2xl md:text-4xl font-extrabold text-white mb-6">
+              El sistema ha fallado, debe esperar a que responda.
+            </h2>
+            <button
+              onClick={handleWaitBlueScreen}
+              className="px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-500 transition-colors"
+            >
+              Esperar
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Mensaje final tras colapso */}
       {isTotalBreakdown && (
-        <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
-          <div className="bg-gray-800 border border-gray-600 rounded-lg p-8 max-w-md w-full mx-4 text-center">
-            <h3 className="text-2xl font-bold text-white mb-4">Fallo total del sistema</h3>
-            <p className="text-gray-300 mb-6">La experiencia ha colapsado. Puede reiniciarla para comenzar nuevamente.</p>
+        <div className="fixed inset-0 bg-black bg-opacity-95 flex items-center justify-center z-50">
+          <div className="text-center px-6">
+            <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6">
+              Esto que experimentaste, fue la obsolescencia programada
+            </h2>
+            <p className="text-gray-300 mb-8 text-sm md:text-base">
+              Gracias por participar. Puede reiniciar para vivirlo nuevamente.
+            </p>
             <button
               onClick={handleRestart}
               className="px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-500 transition-colors"
@@ -256,6 +320,24 @@ export const ObsolescenceArt = () => {
             </div>
             
             <div className="text-right">
+              {(() => {
+                const decayStartMs = 240000;
+                const elapsed = timeElapsed;
+                let battery = 100;
+                if (elapsed >= decayStartMs) {
+                  const lastMinuteElapsed = Math.min(60000, Math.max(0, elapsed - decayStartMs));
+                  const p = lastMinuteElapsed / 60000;
+                  battery = Math.max(1, Math.floor(100 * Math.exp(-3 * p)));
+                }
+                return (
+                  <div className="mb-2">
+                    <div className="text-xs text-gray-300 mb-1">Batería: {battery}%</div>
+                    <div className="w-32 h-2 bg-gray-700 rounded">
+                      <div className="h-2 rounded bg-green-500" style={{ width: `${battery}%` }} />
+                    </div>
+                  </div>
+                );
+              })()}
               <div className={`text-sm px-3 py-1 rounded-full ${
                 degradationLevel > 60 ? 'bg-red-900 text-red-300' :
                 degradationLevel > 30 ? 'bg-yellow-900 text-yellow-300' :
@@ -274,13 +356,8 @@ export const ObsolescenceArt = () => {
       {/* Contenido principal */}
       <main className="max-w-6xl mx-auto p-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Timer */}
-          <div className="lg:col-span-1">
-            <TimerComponent />
-          </div>
-          
-          {/* Survey */}
-          <div className="lg:col-span-2">
+          {/* Survey a pantalla completa */}
+          <div className="lg:col-span-3">
             <SurveyComponent />
           </div>
         </div>
