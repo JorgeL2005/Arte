@@ -2,21 +2,35 @@ import { useState } from 'react';
 import { useObsolescenceStore } from '../store/obsolescenceStore';
 
 const SURVEY_QUESTIONS = [
-  { id: 1, question: "¿Qué entiendes por obsolescencia programada?", type: "text", required: true },
-  { id: 2, question: "Describe una experiencia personal donde sentiste que tu dispositivo 'envejeció' demasiado rápido.", type: "text", required: true },
-  { id: 3, question: "¿Cómo impacta la obsolescencia programada en tu economía?", type: "text", required: true },
-  { id: 4, question: "¿Qué rol juegan las actualizaciones de software en la obsolescencia?", type: "text", required: true },
-  { id: 5, question: "¿Crees que las marcas diseñan productos para durar menos? Explica.", type: "text", required: true },
-  { id: 6, question: "¿Qué emociones te genera que un dispositivo se vuelva lento o inútil?", type: "text", required: true },
-  { id: 7, question: "¿Qué cambios propondrías para reducir la obsolescencia programada?", type: "text", required: true },
-  { id: 8, question: "¿Cómo afecta la obsolescencia al medio ambiente?", type: "text", required: true },
-  { id: 9, question: "Cuenta una historia de un 'fallo' que te obligó a reemplazar un equipo.", type: "text", required: true },
-  { id: 10, question: "¿Qué papel tiene el marketing en tu decisión de reemplazar dispositivos?", type: "text", required: true },
-  { id: 11, question: "¿Hasta qué punto la lentitud y los clics fallidos te llevan a rendirte?", type: "text", required: true },
-  { id: 12, question: "¿Crees que existe el 'derecho a reparar'? ¿Por qué?", type: "text", required: true },
-  { id: 13, question: "Imagina un mundo sin obsolescencia programada. ¿Cómo sería tu relación con la tecnología?", type: "text", required: true },
-  { id: 14, question: "¿Has sentido que una actualización 'rompió' funciones útiles? Describe.", type: "text", required: true },
-  { id: 15, question: "¿Qué responsabilidad tenemos como usuarios frente a la obsolescencia?", type: "text", required: true }
+  { id: 1, question: "¿Qué piensas cuando un aparato que usas empieza a fallar con el tiempo?", type: "text", required: true },
+
+  { id: 2, question: "¿Alguna vez  tu aparato electrónico comenzó a fallar sin explicación?", type: "text", required: true },
+
+  { id: 3, question: "¿Te afecta económicamente tener que cambiar tus dispositivos cada cierto tiempo? Argumenta.", type: "text", required: true },
+
+  { id: 4, question: "¿Has sentido que después de una actualización tu celular algo empeoró en su rendimiento ? ¿Qué pasó?", type: "text", required: true },
+
+  { id: 5, question: "¿Crees que algunos aparatos duran menos de lo que deberían? ¿Por qué?", type: "text", required: true },
+
+  { id: 6, question: "¿Cómo te sientes cuando tu dispositivo se vuelve lento o falla?", type: "text", required: true },
+
+  { id: 7, question: "Si pudieras pedirle algo a las marcas sobre cómo fabricar los dispositivos, ¿qué sería y por qué?", type: "text", required: true },
+
+  { id: 8, question: "¿Qué impacto crees que tiene en el planeta la alta frecuencia de cambio de dispositivos?", type: "text", required: true },
+
+  { id: 9, question: "¿Existen los aparatos electrónicos que duran para siempre? Argumenta.", type: "text", required: true },
+
+  { id: 10, question: "¿influye la publicidad o las 'nuevas tendencias' en tu decisión de comprar un nuevo dispositivo? Argumenta.", type: "text", required: true },
+
+  { id: 11, question: "Cuando tu dispositivo se ralentiza o no responde, ¿qué haces normalmente?", type: "text", required: true },
+
+  { id: 12, question: "¿Te gustaría poder reparar tus dispositivos fácilmente en vez de cambiarlos? ¿Por qué?", type: "text", required: true },
+
+  { id: 13, question: "Imagina que tus aparatos duraran muchos años sin perder rendimiento. ¿Cómo cambiaría tu vida?", type: "text", required: true },
+
+  { id: 14, question: "¿Te ha pasado que una actualización eliminó funciones que te gustaban o empeoró el rendimiento del dispositivo? ¿Cómo te afectó?", type: "text", required: true },
+
+  { id: 15, question: "Como usuario, ¿qué cosas crees que podríamos hacer para cuidar mejor nuestros dispositivos?", type: "text", required: true }
 ];
 
 export const SurveyComponent = () => {
@@ -190,8 +204,8 @@ export const SurveyComponent = () => {
     return (
       <div className="max-w-2xl mx-auto p-6 bg-gray-800 rounded-lg border border-gray-600">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-white mb-4">¡Encuesta Completada!</h2>
-          <p className="text-green-400 mb-4">Gracias por completar la encuesta.</p>
+          <h2 className="text-2xl font-bold text-white mb-4">Ya casi...</h2>
+          <p className="text-green-400 mb-4">Estamos procesando tus respuestas.</p>
           
           {rewardPromised && (
             <div className="bg-yellow-900 border border-yellow-600 rounded-lg p-4 mb-4">

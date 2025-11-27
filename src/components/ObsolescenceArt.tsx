@@ -22,7 +22,8 @@ export const ObsolescenceArt = () => {
     userName,
     setUserName,
     setLoggedIn,
-    experienceDurationMs
+    experienceDurationMs,
+    audioPlaying
   } = useObsolescenceStore();
 
   const [showUpdateMessage, setShowUpdateMessage] = useState(false);
@@ -291,10 +292,10 @@ export const ObsolescenceArt = () => {
         <div className="fixed inset-0 bg-black bg-opacity-95 flex items-center justify-center z-50">
           <div className="text-center px-6">
             <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6">
-              Esto que experimentaste, fue la obsolescencia programada
+              Esto fue obsolescencia programada.
             </h2>
             <p className="text-gray-300 mb-8 text-sm md:text-base">
-              Gracias por participar. Puede reiniciar para vivirlo nuevamente.
+              Gracias por participar. Reinicia para vivirlo nuevamente.
             </p>
             <button
               onClick={handleRestart}
@@ -405,6 +406,17 @@ export const ObsolescenceArt = () => {
           </p>
         </div>
       </footer>
+
+      {isLoggedIn && !audioPlaying && (
+        <div className="fixed bottom-6 left-0 right-0 z-50 flex justify-center">
+          <button
+            onClick={() => window.dispatchEvent(new Event('app:audio-start'))}
+            className="px-6 py-3 bg-green-600 text-white rounded hover:bg-green-500 transition-colors shadow-lg border border-green-400"
+          >
+            Poner musica de fondo
+          </button>
+        </div>
+      )}
     </div>
   );
 };
