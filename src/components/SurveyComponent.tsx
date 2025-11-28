@@ -41,7 +41,9 @@ export const SurveyComponent = () => {
     rewardPromised,
     activeFailures,
     setSurveyProgress,
-    completeSurvey
+    completeSurvey,
+    timeElapsed,
+    experienceDurationMs
   } = useObsolescenceStore();
 
   const [answers, setAnswers] = useState<Record<number, string>>({});
@@ -64,33 +66,34 @@ export const SurveyComponent = () => {
     );
   };
 
+  const inLast35s = timeElapsed >= (experienceDurationMs - 35000);
+
   // Sin corrupción de texto: mantener legible siempre
 
   // Manejar cambios en los inputs con errores introducidos
   const handleInputChange = (questionId: number, value: string) => {
     const failures = getActiveSurveyFailures();
-    let corruptedValue = value;
-
-    // Introducir errores basados en fallos activos
-    failures.forEach(failure => {
-      if (failure.type === 'input' && Math.random() < failure.severity / 10) {
-        switch (failure.id) {
-          case 'input_lag':
-            // Retrasar la entrada
-            setTimeout(() => {
-              setAnswers(prev => ({ ...prev, [questionId]: value }));
-            }, failure.severity * 100);
-            return;
-          default:
-            // Perder caracteres aleatoriamente
-            if (Math.random() > 0.7) {
-              corruptedValue = value.slice(0, -1);
-            }
+    if (inLast35s) {
+      let corruptedValue = value;
+      failures.forEach(failure => {
+        if (failure.type === 'input' && Math.random() < failure.severity / 10) {
+          switch (failure.id) {
+            case 'input_lag':
+              setTimeout(() => {
+                setAnswers(prev => ({ ...prev, [questionId]: value }));
+              }, failure.severity * 100);
+              return;
+            default:
+              if (Math.random() > 0.7) {
+                corruptedValue = value.slice(0, -1);
+              }
+          }
         }
-      }
-    });
-
-    setAnswers(prev => ({ ...prev, [questionId]: corruptedValue }));
+      });
+      setAnswers(prev => ({ ...prev, [questionId]: corruptedValue }));
+    } else {
+      setAnswers(prev => ({ ...prev, [questionId]: value }));
+    }
   };
 
   // Manejar el clic en botones con fallos
@@ -182,11 +185,10 @@ export const SurveyComponent = () => {
   const getInputStyles = () => {
     const failures = getActiveSurveyFailures();
     const hasInputFailures = failures.some(f => f.type === 'input');
-    
     return {
       filter: `blur(${degradation * 1}px)`,
       opacity: 1 - degradation * 0.2,
-      pointerEvents: (hasInputFailures && Math.random() > 0.7 ? 'none' : 'auto') as 'auto' | 'none'
+      pointerEvents: (inLast35s && hasInputFailures && Math.random() > 0.7 ? 'none' : 'auto') as 'auto' | 'none'
     };
   };
 
@@ -262,7 +264,7 @@ export const SurveyComponent = () => {
               onChange={(e) => handleInputChange(currentQ.id, e.target.value)}
               className="w-full p-3 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
               style={getInputStyles()}
-              disabled={getActiveSurveyFailures().some(f => f.type === 'input' && Math.random() > 0.6)}
+              disabled={inLast35s && getActiveSurveyFailures().some(f => f.type === 'input' && Math.random() > 0.6)}
             >
               <option value="">Seleccione una opción</option>
               {(currentQ as { options?: string[] }).options?.map((option: string, index: number) => (
@@ -277,7 +279,7 @@ export const SurveyComponent = () => {
               className="w-full p-3 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
               style={getInputStyles()}
               placeholder={degradation > 0.5 ? "Error al cargar placeholder..." : `Ingrese su ${currentQ.type}`}
-              disabled={getActiveSurveyFailures().some(f => f.type === 'input' && Math.random() > 0.6)}
+              disabled={inLast35s && getActiveSurveyFailures().some(f => f.type === 'input' && Math.random() > 0.6)}
             />
           )}
         </div>

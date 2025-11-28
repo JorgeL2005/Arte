@@ -69,10 +69,10 @@ export const ObsolescenceArt = () => {
 
   // Pantallazo azul desde minuto 3, máximo 2 veces
   useEffect(() => {
-    if (!showBlueScreen && blueScreenCount < 2 && timeElapsed >= 180000 && Math.random() > 0.997) {
+    if (!showBlueScreen && blueScreenCount < 2 && timeElapsed >= Math.floor(experienceDurationMs * 0.6) && Math.random() > 0.997) {
       setShowBlueScreen(true);
     }
-  }, [timeElapsed, showBlueScreen, blueScreenCount]);
+  }, [timeElapsed, showBlueScreen, blueScreenCount, experienceDurationMs]);
 
   // Efectos visuales de degradación
   const getBodyStyles = () => {
@@ -322,7 +322,7 @@ export const ObsolescenceArt = () => {
             
             <div className="text-right">
               {(() => {
-                const decayStartMs = 240000;
+                const decayStartMs = experienceDurationMs - 60000;
                 const elapsed = timeElapsed;
                 let battery = 100;
                 if (elapsed >= decayStartMs) {

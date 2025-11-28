@@ -54,15 +54,19 @@ export interface ObsolescenceState {
   reset: () => void;
 }
 
-const EXPERIENCE_DURATION_MS = 300000;
-const FAILURE_POINTS = [
-  { time: 120000, failures: ['button_delay'] },
-  { time: 180000, failures: ['audio_distortion', 'visual_glitch'] },
-  { time: 240000, failures: ['input_lag', 'button_unresponsive'] },
-  { time: 270000, failures: ['screen_flicker', 'audio_cuts'] },
-  { time: 295000, failures: ['navigation_block'] },
-  { time: 300000, failures: ['total_breakdown'] }
+const EXPERIENCE_DURATION_MS = 240000;
+const FAILURE_FRACTIONS = [
+  { p: 0.4, failures: ['button_delay'] },
+  { p: 0.6, failures: ['audio_distortion', 'visual_glitch'] },
+  { p: 0.8, failures: ['input_lag', 'button_unresponsive'] },
+  { p: 0.9, failures: ['screen_flicker', 'audio_cuts'] },
+  { p: 0.9833333, failures: ['navigation_block'] },
+  { p: 1.0, failures: ['total_breakdown'] }
 ];
+const FAILURE_POINTS = FAILURE_FRACTIONS.map(({ p, failures }) => ({
+  time: Math.floor(EXPERIENCE_DURATION_MS * p),
+  failures
+}));
 
 const FAILURE_TYPES = {
   button_delay: { type: 'button' as const, severity: 3 },
